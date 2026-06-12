@@ -1,0 +1,62 @@
+[
+  {
+    "speaker": "Emma",
+    "text": "Hey everyone, welcome back to our podcast! Today we're going to talk about the MERN stack, and I have to say, I'm super excited. Andrew, can you tell us a little bit about what the MERN stack is?"
+  },
+  {
+    "speaker": "Andrew",
+    "text": "Absolutely, Emma! The MERN stack is a set of technologies used for building web applications. It stands for MongoDB, Express, React, and Node.js. Think of it like a recipe for your favorite dish - you need all the right ingredients to make it work."
+  },
+  {
+    "speaker": "Emma",
+    "text": "Wow, that sounds interesting! I've heard of some of those technologies before, but I've never really understood how they fit together. Can you walk us through what each part does?"
+  },
+  {
+    "speaker": "Andrew",
+    "text": "Sure thing! MongoDB is like a filing cabinet where you store all your data. Express is like a messenger that helps your application talk to the filing cabinet. React is like a builder that creates the user interface, and Node.js is like the engine that makes everything run smoothly."
+  },
+  {
+    "speaker": "Emma",
+    "text": "I see! So, it's like a team working together to create a seamless experience for the user. That makes sense. Now, I know we have a 30-day roadmap to learn the MERN stack. Can you tell us a little bit about that?"
+  },
+  {
+    "speaker": "Andrew",
+    "text": "The 30-day roadmap is a daily checklist of resources and tips to help you learn the MERN stack. It's designed to be a step-by-step guide, so you can follow along and build your skills one day at a time."
+  },
+  {
+    "speaker": "Emma",
+    "text": "That sounds amazing! I love the idea of having a clear plan to follow. What kind of things can we expect to learn in the first few days of the roadmap?"
+  },
+  {
+    "speaker": "Andrew",
+    "text": "In the first few days, we'll be covering the basics of each technology, like setting up MongoDB and creating a simple Express server. We'll also be introducing React and Node.js, and showing how they fit into the bigger picture."
+  },
+  {
+    "speaker": "Emma",
+    "text": "Wait, really? We'll be diving in that deep that quickly? I'm both excited and a little intimidated."
+  },
+  {
+    "speaker": "Andrew",
+    "text": "Don't worry, Emma! The roadmap is designed to be challenging, but also manageable. We'll be taking it one step at a time, and providing plenty of resources and support along the way."
+  },
+  {
+    "speaker": "Emma",
+    "text": "Okay, that sounds reassuring. I'm definitely excited to get started and see where this journey takes us. Thanks for breaking it down for us, Andrew!"
+  },
+  {
+    "speaker": "Andrew",
+    "text": "No problem, Emma! I'm excited to be a part of this journey with you and our listeners. Let's get started and see what we can build with the MERN stack!"
+  },
+  {
+    "speaker": "Emma",
+    "text": "Alright, before we go, can you give us a sneak peek at what's coming up in the next few days of the roadmap?"
+  },
+  {
+    "speaker": "Andrew",
+    "text": "Let's just say that we'll be building some really cool projects, and diving deeper into the world of MERN. You'll have to tune in to find out more!"
+  },
+  {
+    "speaker": "Emma",
+    "text": "Intriguing! I'm sure our listeners are eager to find out more. Thanks again, Andrew, for sharing your expertise with us today."
+  }
+]

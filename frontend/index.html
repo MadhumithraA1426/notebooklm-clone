@@ -1,23 +1,332 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>NotebookLM Clone</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotebookLM Clone - Your AI Study Space</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Mermaid.js for Mindmaps -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#111022',
+                primaryColor: '#6366F1',
+                primaryTextColor: '#FFFFFF',
+                lineColor: '#8B5CF6',
+                secondaryColor: '#312E81',
+                tertiaryColor: '#1E1B4B'
+            }
+        });
+    </script>
 </head>
 <body>
+    <div class="app-container">
+        <!-- Sidebar: Sources -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon"><i class="fa-solid fa-book-open-reader"></i></span>
+                    <h1>Notebook<span>LM</span></h1>
+                </div>
+                <div class="tagline">Personal AI Workspace</div>
+            </div>
 
-<h1>NotebookLM Clone</h1>
+            <!-- Upload Zone -->
+            <div class="upload-container">
+                <div class="upload-box" id="dropZone">
+                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                    <p class="upload-title">Add Sources</p>
+                    <p class="upload-subtitle">Drag & drop or click</p>
+                    <span class="upload-formats">PDF, DOCX, TXT, MD</span>
+                    <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt,.md" style="display: none;">
+                </div>
+            </div>
 
-<input
-type="file"
-id="fileInput">
+            <!-- Sources List Header -->
+            <div class="sources-title-container">
+                <h2>Sources (<span id="sourceCount">0</span>)</h2>
+                <div class="sources-actions" id="sourceActions" style="display: none;">
+                    <button onclick="selectAllSources()" title="Select All"><i class="fa-solid fa-square-check"></i></button>
+                    <button onclick="clearSourceSelection()" title="Deselect All"><i class="fa-regular fa-square"></i></button>
+                </div>
+            </div>
 
-<button onclick="uploadFile()">
-Upload
-</button>
+            <!-- Sources List -->
+            <div class="sources-list" id="sourcesList">
+                <div class="empty-sources">
+                    <i class="fa-regular fa-file-lines empty-icon"></i>
+                    <p>No documents uploaded yet.</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <span class="status-indicator online"></span>
+                <span>Groq Llama-3 Active</span>
+            </div>
+        </aside>
 
-<p id="result"></p>
+        <!-- Main Workspace -->
+        <main class="workspace">
+            <!-- Top Navigation Tabs -->
+            <header class="workspace-header">
+                <nav class="tabs-nav">
+                    <button class="tab-btn active" onclick="switchTab('chat')">
+                        <i class="fa-solid fa-comments"></i> Chat
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('summary')">
+                        <i class="fa-solid fa-file-invoice"></i> Summary
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-spell-check"></i> Quiz
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('mindmap')">
+                        <i class="fa-solid fa-diagram-project"></i> Mind Map
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('audio')">
+                        <i class="fa-solid fa-headphones"></i> Audio Overview
+                    </button>
+                </nav>
+            </header>
 
-<script src="script.js"></script>
+            <!-- Workspace Content area -->
+            <div class="workspace-content">
+                
+                <!-- TAB 1: CHAT -->
+                <div id="tab-chat" class="tab-pane active">
+                    <div class="chat-container">
+                        <!-- Chat Messages -->
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="assistant-welcome">
+                                <div class="welcome-card">
+                                    <div class="welcome-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                                    <h2>Welcome to your Notebook Space!</h2>
+                                    <p>Upload source documents on the left and select which ones you want to discuss. Ask questions, extract terms, or compile guides!</p>
+                                    <div class="welcome-suggestions">
+                                        <button onclick="useSuggestion('Summarize the main points of the selected documents.')">"Summarize the main points..."</button>
+                                        <button onclick="useSuggestion('What are the key terms and their definitions?')">"What are the key terms?"</button>
+                                        <button onclick="useSuggestion('Create a study guide from these materials.')">"Create a study guide..."</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Active Source Indicator above Input -->
+                        <div class="chat-sources-indicator" id="chatSourcesIndicator">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>No sources selected. Upload and check files in the sidebar to chat.</span>
+                        </div>
+
+                        <!-- Chat Input Capsule -->
+                        <div class="chat-input-container">
+                            <textarea id="chatInput" placeholder="Ask anything about your documents..." rows="1" onkeydown="handleChatKeyDown(event)"></textarea>
+                            <button id="sendBtn" onclick="sendChatMessage()" class="send-btn" disabled>
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: SUMMARY -->
+                <div id="tab-summary" class="tab-pane">
+                    <div class="feature-pane-container" id="summaryContainer">
+                        <div class="action-landing" id="summaryLanding">
+                            <div class="landing-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                            <h2>Generate Document Summary</h2>
+                            <p>Get a structured breakdown including document overview, key takeaways, and core concept definition tables.</p>
+                            <button class="action-btn" onclick="generateSummaryAction()">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Summary
+                            </button>
+                        </div>
+                        
+                        <!-- Summary Content display -->
+                        <div class="markdown-body summary-content" id="summaryContent" style="display: none;"></div>
+                        
+                        <!-- Action Buttons (Floating style) -->
+                        <div class="export-actions" id="summaryActions" style="display: none;">
+                            <button onclick="downloadDocument('summary')" class="download-btn">
+                                <i class="fa-solid fa-file-pdf"></i> Download PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: QUIZ -->
+                <div id="tab-quiz" class="tab-pane">
+                    <div class="feature-pane-container" id="quizContainer">
+                        <div class="action-landing" id="quizLanding">
+                            <div class="landing-icon"><i class="fa-solid fa-spell-check"></i></div>
+                            <h2>Interactive Study Quiz</h2>
+                            <p>Generate a custom multiple-choice quiz based on your document's contents to test your knowledge.</p>
+                            <button class="action-btn" onclick="generateQuizAction()">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Quiz
+                            </button>
+                        </div>
+
+                        <!-- Quiz Layout -->
+                        <div class="quiz-play-space" id="quizPlaySpace" style="display: none;">
+                            <div class="quiz-header">
+                                <div class="quiz-progress">Question <span id="currentQuestionNum">1</span> of <span id="totalQuestionsNum">5</span></div>
+                                <div class="quiz-score">Score: <span id="quizScore">0</span></div>
+                            </div>
+                            
+                            <div class="quiz-card" id="quizCard">
+                                <h3 class="quiz-question" id="quizQuestionText">What is the capital of France?</h3>
+                                <div class="quiz-options" id="quizOptionsList">
+                                    <!-- Options populated by JS -->
+                                </div>
+                                <div class="quiz-explanation-box" id="quizExplanationBox" style="display: none;">
+                                    <div class="explanation-title"><i class="fa-solid fa-circle-info"></i> Explanation</div>
+                                    <p id="quizExplanationText">Explanation goes here...</p>
+                                </div>
+                            </div>
+
+                            <div class="quiz-controls">
+                                <button id="quizPrevBtn" onclick="prevQuestion()" disabled><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                                <button id="quizNextBtn" onclick="nextQuestion()">Next <i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Quiz Completion Screen -->
+                        <div class="quiz-finish-screen" id="quizFinishScreen" style="display: none;">
+                            <div class="finish-icon"><i class="fa-solid fa-circle-check"></i></div>
+                            <h2>Quiz Completed!</h2>
+                            <p class="final-score-text">Your Final Score: <span id="finalScore">0</span> / <span id="finalTotal">5</span></p>
+                            <div class="score-percentage" id="scorePercentage">100%</div>
+                            <div class="finish-actions">
+                                <button onclick="generateQuizAction()" class="action-btn-secondary"><i class="fa-solid fa-arrows-rotate"></i> Retake Quiz</button>
+                                <button onclick="downloadDocument('quiz')" class="download-btn"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: MIND MAP -->
+                <div id="tab-mindmap" class="tab-pane">
+                    <div class="feature-pane-container" id="mindmapContainer">
+                        <div class="action-landing" id="mindmapLanding">
+                            <div class="landing-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                            <h2>Visual Mind Map</h2>
+                            <p>Generate a visual hierarchical mindmap diagram that maps out topics and subtopics from the text.</p>
+                            <button class="action-btn" onclick="generateMindmapAction()">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Mind Map
+                            </button>
+                        </div>
+                        
+                        <!-- Mermaid Chart display -->
+                        <div class="mindmap-viewer" id="mindmapViewer" style="display: none;">
+                            <div class="mindmap-canvas-container">
+                                <div id="mermaidContainer" class="mermaid"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="export-actions" id="mindmapActions" style="display: none;">
+                            <button onclick="downloadMindmapText()" class="download-btn-secondary">
+                                <i class="fa-solid fa-code"></i> Copy Mermaid Syntax
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: AUDIO OVERVIEW -->
+                <div id="tab-audio" class="tab-pane">
+                    <div class="feature-pane-container" id="audioContainer">
+                        <div class="action-landing" id="audioLanding">
+                            <div class="landing-icon"><i class="fa-solid fa-headphones"></i></div>
+                            <h2>AI Audio Overview</h2>
+                            <p>Create a podcast-like discussion where two AI hosts (Emma and Andrew) digest your document, explain concepts with analogies, and converse naturally.</p>
+                            <button class="action-btn" onclick="generateAudioAction()">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Audio
+                            </button>
+                        </div>
+
+                        <!-- Audio Interface -->
+                        <div class="audio-workspace" id="audioWorkspace" style="display: none;">
+                            <!-- Player Control Box -->
+                            <div class="player-card">
+                                <div class="podcast-info">
+                                    <div class="podcast-avatar"><i class="fa-solid fa-radio"></i></div>
+                                    <div class="podcast-detail">
+                                        <h3>Notebook Overview Podcast</h3>
+                                        <p>Emma & Andrew discussing your notebook</p>
+                                    </div>
+                                </div>
+                                
+                                <audio id="podcastAudio" preload="auto"></audio>
+                                
+                                <div class="audio-controls-row">
+                                    <!-- Main playback controls -->
+                                    <button class="audio-btn secondary-control" onclick="adjustAudioTime(-10)" title="Rewind 10s">
+                                        <i class="fa-solid fa-backward-step"></i>
+                                    </button>
+                                    <button class="audio-btn play-pause-btn" id="playPauseBtn" onclick="toggleAudio()" title="Play">
+                                        <i class="fa-solid fa-play"></i>
+                                    </button>
+                                    <button class="audio-btn secondary-control" onclick="adjustAudioTime(10)" title="Forward 10s">
+                                        <i class="fa-solid fa-forward-step"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="timeline-row">
+                                    <span id="currentTime">00:00</span>
+                                    <input type="range" id="audioSeekBar" value="0" max="100" class="seeker-bar" oninput="seekAudio()">
+                                    <span id="durationTime">00:00</span>
+                                </div>
+
+                                <div class="extra-controls-row">
+                                    <div class="speed-control">
+                                        <label for="speedSelect">Speed: </label>
+                                        <select id="speedSelect" onchange="changePlaybackSpeed()">
+                                            <option value="1.0" selected>1.0x</option>
+                                            <option value="1.25">1.25x</option>
+                                            <option value="1.5">1.5x</option>
+                                            <option value="2.0">2.0x</option>
+                                        </select>
+                                    </div>
+                                    <div class="download-audio-control">
+                                        <a id="audioDownloadLink" download class="audio-download-btn" title="Download MP3">
+                                            <i class="fa-solid fa-download"></i> Download MP3
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Script Transcript View -->
+                            <div class="transcript-section">
+                                <h3><i class="fa-solid fa-list-check"></i> Interactive Transcript</h3>
+                                <div class="transcript-box" id="transcriptBox">
+                                    <!-- Dialogue lines populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Loader Overlay -->
+            <div class="loader-overlay" id="loaderOverlay" style="display: none;">
+                <div class="loader-content">
+                    <div class="orbit-spinner">
+                        <div class="orbit"></div>
+                        <div class="orbit"></div>
+                        <div class="orbit"></div>
+                    </div>
+                    <p id="loaderMessage">Processing document...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
