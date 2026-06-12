@@ -6,12 +6,13 @@
 .env.*
 
 # =========================
-# Python
+# Python Cache
 # =========================
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+*.pyc
 
 # =========================
 # Virtual Environments
@@ -31,13 +32,13 @@ env/
 .idea/
 
 # =========================
-# Uploaded Files
+# Uploads
 # =========================
 uploads/*
 !uploads/.gitkeep
 
 # =========================
-# Vector Databases
+# Vector Store
 # =========================
 vectors/*
 !vectors/.gitkeep
@@ -45,8 +46,14 @@ vectors/*
 # =========================
 # Generated Files
 # =========================
+generated/*.pdf
+generated/*.mp3
+generated/*.wav
+generated/*.json
+
 generated/pdfs/*
 generated/audios/*
+
 !generated/pdfs/.gitkeep
 !generated/audios/.gitkeep
 
@@ -56,6 +63,14 @@ generated/audios/*
 database/*.db
 database/*.sqlite
 database/*.sqlite3
+database/*.json
+
+# =========================
+# FAISS
+# =========================
+*.faiss
+*.bin
+*.pkl
 
 # =========================
 # Logs
@@ -75,12 +90,6 @@ dist/
 .ipynb_checkpoints/
 
 # =========================
-# OS Files
-# =========================
-.DS_Store
-Thumbs.db
-
-# =========================
 # Testing
 # =========================
 .pytest_cache/
@@ -88,8 +97,20 @@ Thumbs.db
 htmlcov/
 
 # =========================
-# FAISS Files
+# OS Files
 # =========================
-*.faiss
-*.bin
-*.pkl
+.DS_Store
+Thumbs.db
+
+# =========================
+# Audio Models / Large Files
+# =========================
+*.ckpt
+*.pt
+*.pth
+*.onnx
+
+# =========================
+# Node Modules (if frontend expands)
+# =========================
+node_modules/
